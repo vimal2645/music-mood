@@ -5,13 +5,16 @@ import PlaylistPlayer from './components/PlaylistPlayer';
 import TopTracks from './components/TopTracks';
 import './App.css';
 
+// ✅ API base for backend (Render URL by default)
+const API_BASE =
+  process.env.REACT_APP_API_BASE || 'https://music-mood-86s0.onrender.com';
+const API = `${API_BASE}/api`;
+
 function App() {
   const [tracks, setTracks] = useState([]);
-  const [playlist, setPlaylist] = useState([]);
+  const [playlist, setPlaylist] = useState(null);
   const [topTracks, setTopTracks] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const API = process.env.REACT_APP_API || 'http://localhost:5000/api';
 
   // Fetch all tracks
   const fetchTracks = async () => {
@@ -46,7 +49,7 @@ function App() {
         body: JSON.stringify({ moodPrompt })
       });
       const data = await res.json();
-      
+
       if (data.success) {
         setPlaylist(data.playlist);
         await fetchTopTracks();
@@ -79,8 +82,10 @@ function App() {
         <div className="grid">
           <section className="card">
             <h2>📤 Upload Music</h2>
-            <UploadMusic onUpload={() => { fetchTracks(); }} />
-            <p className="info">Total Tracks: <strong>{tracks.length}</strong></p>
+            <UploadMusic onUpload={fetchTracks} />
+            <p className="info">
+              Total Tracks: <strong>{tracks.length}</strong>
+            </p>
           </section>
 
           <section className="card">
@@ -101,7 +106,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p>Built with ❤️ </p>
+        <p>Built with ❤️</p>
       </footer>
     </div>
   );

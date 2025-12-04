@@ -12,7 +12,7 @@ function PlaylistPlayer({ playlist, tracks }) {
     ? tracks.find(t => t._id === playlist.tracks[currentTrackIndex]?.trackId)
     : null;
 
-  const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+  const API_BASE = process.env.REACT_APP_API_BASE || 'https://music-mood-86s0.onrender.com';
 
   // Reset + autoplay when track changes
   useEffect(() => {

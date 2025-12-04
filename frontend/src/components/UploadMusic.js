@@ -1,21 +1,25 @@
+// src/components/UploadMusic.js
 import React, { useRef, useState } from 'react';
 import './UploadMusic.css';
+
+const API_BASE =
+  process.env.REACT_APP_API_BASE || 'https://music-mood-86s0.onrender.com';
+const API = `${API_BASE}/api`;
 
 function UploadMusic({ onUpload }) {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
 
   const handleFileSelect = async (e) => {
-    const file = e.target.files[0]; // get first selected file
+    const file = e.target.files[0];
     if (!file) return;
 
     const formData = new FormData();
-    // MUST match upload.single('file') in backend
-    formData.append('file', file);
+    formData.append('file', file); // MUST be 'file'
 
     setUploading(true);
     try {
-      const res = await fetch('/api/tracks/upload', {
+      const res = await fetch(`${API}/tracks/upload`, {
         method: 'POST',
         body: formData
       });
@@ -31,7 +35,7 @@ function UploadMusic({ onUpload }) {
       }
     } catch (err) {
       console.error('Upload error:', err);
-      alert('Upload failed');
+      alert('Upload failed (network/API error)');
     } finally {
       setUploading(false);
     }
@@ -40,7 +44,7 @@ function UploadMusic({ onUpload }) {
   return (
     <div className="upload-section">
       <input
-        id="file-input"              // needed for label htmlFor
+        id="file-input"
         ref={fileInputRef}
         type="file"
         accept=".mp3,.wav"
